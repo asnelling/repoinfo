@@ -6,21 +6,31 @@ and size) for GitHub repositories.
 ## Usage
 
 ```Shell
-./repoinfo.py [-h] repositories [repositories ...]
+./repoinfo.py [-h] [-s FIELD] repositories [repositories ...]
 ```
 
 ### Positional Arguments
 
-- `repositories`: GitHub repos to get info for (in user/repo format)
+| argument       | description                                        |
+| -------------- | -------------------------------------------------- |
+| `repositories` | GitHub repos to get info for (in user/repo format) |
 
 ### Optional Arguments
 
-- `-h`, `--help`: show usage information
+| short      | long           | description                                                        |
+| ---------- | -------------- | ------------------------------------------------------------------ |
+| `-h`       | `--help`       | show usage information                                             |
+| `-s FIELD` | `--sort FIELD` | sort output on FIELD, which may be: name, watchers, forks, or size |
 
 ## Example
 
 ```Shell
-$ ./repoinfo.py sindresorhus/awesome vinta/awesome-python timofurrer/awesome-asyncio herrjemand/awesome-webauthn
+$ ./repoinfo.py \
+      sindresorhus/awesome \
+      vinta/awesome-python \
+      timofurrer/awesome-asyncio \
+      herrjemand/awesome-webauthn
+      
 NAME                        WATCHERS FORKS SIZE
 sindresorhus/awesome          156425 20318 1271
 vinta/awesome-python           95518 18667 6596

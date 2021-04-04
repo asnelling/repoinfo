@@ -25,6 +25,13 @@ async def main():
     parser.add_argument(
         "repositories", nargs="+", help="GitHub repos (e.g.: username/repo)"
     )
+    parser.add_argument(
+        "-s",
+        "--sort",
+        choices=["name", "watchers", "forks", "size"],
+        help="field to sort output on, where FIELD is one of: name, watchers, forks, size",
+        metavar="FIELD",
+    )
     args = parser.parse_args()
 
     headers = {
@@ -33,9 +40,7 @@ async def main():
     prefix = "https://api.github.com/repos/"
 
     async with aiohttp.ClientSession(headers=headers, auth=get_auth()) as session:
-        print(
-            "NAME                                               WATCHERS FORKS    SIZE"
-        )
+        repos = []
         for repo in args.repositories:
             repo = repo.replace("https://github.com/", "")
             async with session.get(prefix + repo) as response:
@@ -53,8 +58,25 @@ async def main():
                 size = data.get("size", 0)
                 watchers = data.get("watchers", 0)
                 forks = data.get("forks", 0)
-                full_name = data.get("full_name", repo)
-                print(f"{full_name:50} {watchers:8} {forks:8} {size:20}")
+                name = data.get("full_name", repo)
+                repos.append(
+                    {
+                        "name": name,
+                        "size": size,
+                        "watchers": watchers,
+                        "forks": forks,
+                    }
+                )
+
+        if args.sort:
+            repos = sorted(repos, key=lambda repo: repo[args.sort])
+
+        print(
+            "NAME                                               WATCHERS FORKS    SIZE"
+        )
+
+        for repo in repos:
+            print("{name:50} {watchers:8} {forks:8} {size:20}".format(**repo))
 
 
 if __name__ == "__main__":

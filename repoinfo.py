@@ -2,6 +2,7 @@
 
 import argparse
 import asyncio
+import sys
 
 import aiohttp
 
@@ -21,6 +22,13 @@ async def main():
         for repo in args.repositories:
             repo = repo.replace("https://github.com/", "")
             async with session.get(prefix + repo) as response:
+                if response.status != 200:
+                    print(f"HTTP Error {response.status}: {response.reason}", file=sys.stderr)
+                    body = await response.text()
+                    if body:
+                        print(body, file=sys.stderr)
+                    continue
+
                 data = await response.json()
                 size = data.get('size', 0)
                 watchers = data.get('watchers', 0)

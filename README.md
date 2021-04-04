@@ -27,3 +27,11 @@ vinta/awesome-python           95518 18667 6596
 timofurrer/awesome-asyncio      2918   228  116
 herrjemand/awesome-webauthn      393    49  152
 ```
+
+## Rate Limiting
+
+The GitHub API imposes strict
+[rate limiting](https://docs.github.com/en/rest/overview/resources-in-the-rest-api#rate-limiting)
+for unauthenticated requests. For increased limits, provide an
+[OAuth2 key/secret](https://docs.github.com/en/rest/overview/resources-in-the-rest-api#oauth2-keysecret)
+in the `GH_CLIENT_ID` and `GH_CLIENT_SECRET` environment variables when running `repoinfo`.

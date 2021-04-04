@@ -2,9 +2,20 @@
 
 import argparse
 import asyncio
+import os
 import sys
 
 import aiohttp
+
+
+def get_auth():
+    client_id = os.getenv('GH_CLIENT_ID')
+    client_secret = os.getenv('GH_CLIENT_SECRET')
+
+    if client_id and client_secret:
+        return aiohttp.BasicAuth(client_id, client_secret)
+    
+    return None
 
 
 async def main():
@@ -17,7 +28,7 @@ async def main():
     }
     prefix = 'https://api.github.com/repos/'
 
-    async with aiohttp.ClientSession(headers=headers) as session:
+    async with aiohttp.ClientSession(headers=headers, auth=get_auth()) as session:
         print("NAME                                               WATCHERS FORKS    SIZE")
         for repo in args.repositories:
             repo = repo.replace("https://github.com/", "")
